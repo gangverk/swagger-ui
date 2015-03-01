@@ -28,7 +28,7 @@
       if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
-        url = "http://petstore.swagger.io/v2/swagger.json";
+        url = "https://test-api.sling.is/api/spec.json";
       }
       window.swaggerUi = new SwaggerUi({
         url: url,
@@ -60,7 +60,7 @@
         log("key: " + key);
         if(key && key.trim() != "") {
             log("added key " + key);
-            window.authorizations.add("api_key", new ApiKeyAuthorization("api_key", key, "query"));
+            window.authorizations.add("api_key", new ApiKeyAuthorization("Authorization", key, "header"));
         }
       }
 
