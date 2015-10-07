@@ -33,7 +33,7 @@
       if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
-        url = "https://test-api.sling.is/spec.json";
+        url = window.location.origin + "/spec.json";
       }
 
       // Pre load translate...
