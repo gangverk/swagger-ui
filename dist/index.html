@@ -84,12 +84,6 @@
 
       $('#input_apiKey').change(addApiKeyAuthorization);
 
-      // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
-      /*
-        var apiKey = "myApiKeyXXXX123456789";
-        $('#input_apiKey').val(apiKey);
-      */
-
       window.swaggerUi.load();
 
       function log() {
@@ -97,7 +91,34 @@
           console.log.apply(console, arguments);
         }
       }
+
   });
+  function login() {
+    var dialog = document.getElementById('login');
+    dialog.show();
+    document.getElementById('exit').onclick = function() {
+      $.ajax({
+              url: window.location.origin+'/account/login',
+              type:'POST',
+              data: JSON.stringify({
+                email: $("#sling_email").val(),
+                password: $("#sling_password").val()
+              }),
+              contentType:"application/json; charset=utf-8",
+              dataType:"json"
+            })
+        .done(function(data, textStatus, request) {
+            $('#input_apiKey').val(request.getResponseHeader('Authorization')).change();
+        })
+        .fail(function(xhr, textStatus, errorThrown) {
+          alert( JSON.parse(xhr.responseText).message );
+        })
+        .always(function() {
+          dialog.close();
+        });
+
+    };
+  }
   </script>
 </head>
 
@@ -108,9 +129,17 @@
     <form id='api_selector'>
       <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
       <div class='input'><input placeholder="Authorization" id="input_apiKey" name="apiKey" type="text"/></div>
+      <div class='input'><a id="explore" onclick="login()">Login</a></div>
     </form>
   </div>
 </div>
+
+<dialog id="login">
+    <h3>Login to Sling</h3>
+    <input type="text" id="sling_email" placeholder="me@email.com"/>
+    <input type="password" id="sling_password"/>
+    <button id="exit">Login</button>
+</dialog>
 
 <div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
 <div id="swagger-ui-container" class="swagger-ui-wrap"></div>
