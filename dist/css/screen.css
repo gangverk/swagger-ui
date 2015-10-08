@@ -1248,7 +1248,7 @@
   width: 400px;
 }
 .swagger-section #header form#api_selector .input a#loginButton {
-  display: block;
+  display: none;
   text-decoration: none;
   font-weight: bold;
   padding: 6px 8px;
