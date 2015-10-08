@@ -94,7 +94,7 @@
 
   });
   function login() {
-    var dialog = document.getElementById('login');
+    var dialog = $("#loginDialog");
     dialog.show();
     document.getElementById('exit').onclick = function() {
       $.ajax({
@@ -111,10 +111,14 @@
             $('#input_apiKey').val(request.getResponseHeader('Authorization')).change();
         })
         .fail(function(xhr, textStatus, errorThrown) {
-          alert( JSON.parse(xhr.responseText).message );
+          try{
+            alert( JSON.parse(xhr.responseText).message );
+          }catch(e) {
+            console.log(e);
+          }
         })
         .always(function() {
-          dialog.close();
+          dialog.hide();
         });
 
     };
@@ -132,14 +136,13 @@
       <div class='input'><a id="loginButton" onclick="login()">Login</a></div>
     </form>
   </div>
+  <div id="loginDialog" style="display:none; border:2px solid black;position:absolute;padding:16px;right:0px;background:white;">
+      <h3>Login to Sling</h3>
+      <input type="text" id="sling_email" placeholder="me@email.com"/>
+      <input type="password" id="sling_password"/>
+      <button id="exit">Login</button>
+  </div>
 </div>
-
-<dialog id="login">
-    <h3>Login to Sling</h3>
-    <input type="text" id="sling_email" placeholder="me@email.com"/>
-    <input type="password" id="sling_password"/>
-    <button id="exit">Login</button>
-</dialog>
 
 <div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
 <div id="swagger-ui-container" class="swagger-ui-wrap"></div>
