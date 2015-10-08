@@ -84,6 +84,11 @@
 
       $('#input_apiKey').change(addApiKeyAuthorization);
 
+      $("#loginForm").submit(function(e) {
+        e.preventDefault();
+        login($("#sling_email").val(), $("#sling_password").val())
+      });
+
       window.swaggerUi.load();
 
       function log() {
@@ -92,36 +97,33 @@
         }
       }
 
-  });
-  function login() {
-    var dialog = $("#loginDialog");
-    dialog.show();
-    document.getElementById('exit').onclick = function() {
-      $.ajax({
-              url: window.location.origin+'/account/login',
-              type:'POST',
-              data: JSON.stringify({
-                email: $("#sling_email").val(),
-                password: $("#sling_password").val()
-              }),
-              contentType:"application/json; charset=utf-8",
-              dataType:"json"
-            })
-        .done(function(data, textStatus, request) {
-            $('#input_apiKey').val(request.getResponseHeader('Authorization')).change();
-        })
-        .fail(function(xhr, textStatus, errorThrown) {
-          try{
-            alert( JSON.parse(xhr.responseText).message );
-          }catch(e) {
-            console.log(e);
-          }
-        })
-        .always(function() {
-          dialog.hide();
-        });
 
-    };
+  });
+
+  function login(email, password) {
+    $.ajax({
+            url: window.location.origin+'/account/login',
+            type:'POST',
+            data: JSON.stringify({
+              email: email,
+              password: password
+            }),
+            contentType:"application/json; charset=utf-8",
+            dataType:"json"
+          })
+      .done(function(data, textStatus, request) {
+          $('#input_apiKey').val(request.getResponseHeader('Authorization')).change();
+      })
+      .fail(function(xhr, textStatus, errorThrown) {
+        try{
+          alert( JSON.parse(xhr.responseText).message );
+        }catch(e) {
+          console.log(e);
+        }
+      })
+      .always(function() {
+        $("#loginDialog").hide();
+      });
   }
   </script>
 </head>
@@ -133,14 +135,17 @@
     <form id='api_selector'>
       <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
       <div class='input'><input placeholder="Authorization" id="input_apiKey" name="apiKey" type="text"/></div>
-      <div class='input'><a id="loginButton" onclick="login()">Login</a></div>
+      <div class='input'><a id="loginButton" onclick="$('#loginDialog').show()">Login</a></div>
     </form>
   </div>
-  <div id="loginDialog" style="display:none; border:2px solid black;position:absolute;padding:16px;right:0px;background:white;">
+  <div id="loginDialog" style="display:none;border:2px solid black;position:absolute;padding:16px;right:0px;background:white;">
+      <span onclick="$('#loginDialog').hide()" style="color:red;position:absolute;top:1px;right:2px;cursor:pointer;">x</span>
       <h3>Login to Sling</h3>
-      <input type="text" id="sling_email" placeholder="me@email.com"/>
-      <input type="password" id="sling_password"/>
-      <button id="exit">Login</button>
+      <form id="loginForm">
+        <input type="text" id="sling_email"/>
+        <input type="password" id="sling_password"/>
+        <input type="submit" text="Login"/>
+      </form>
   </div>
 </div>
 
