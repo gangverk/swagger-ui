@@ -6,9 +6,14 @@
   ],
   "plugins": [
     "transform-runtime",
+    "babel-plugin-transform-es2015-constants",
     [
       "module-alias",
       [
+        {
+          "expose": "root",
+          "src": "."
+        },
         {
           "expose": "components",
           "src": "src/core/components"
@@ -16,6 +21,10 @@
         {
           "expose": "core",
           "src": "src/core"
+        },
+        {
+          "expose": "plugins",
+          "src": "src/plugins"
         },
         {
           "expose": "img",
