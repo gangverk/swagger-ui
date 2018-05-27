@@ -37,11 +37,28 @@
     <script src="./swagger-ui-bundle.js"> </script>
     <script src="./swagger-ui-standalone-preset.js"> </script>
     <script>
+    const DisableTryItOutPlugin = function() {
+      return {
+        statePlugins: {
+          spec: {
+            wrapSelectors: {
+              allowTryItOutFor: () => () => false
+            }
+          }
+        }
+      }
+    }
     window.onload = function() {
+      var url = window.location.search.match(/url=([^&]+)/);
+      if (url && url.length > 1) {
+        url = decodeURIComponent(url[1]);
+      } else {
+        url = window.location.origin + "/v1/spec.json";
+      }
 
       // Build a system
       const ui = SwaggerUIBundle({
-        url: "http://petstore.swagger.io/v2/swagger.json",
+        url: url,
         dom_id: '#swagger-ui',
         deepLinking: true,
         presets: [
@@ -49,7 +66,8 @@
           SwaggerUIStandalonePreset
         ],
         plugins: [
-          SwaggerUIBundle.plugins.DownloadUrl
+          SwaggerUIBundle.plugins.DownloadUrl,
+          DisableTryItOutPlugin
         ],
         layout: "StandaloneLayout"
       })
